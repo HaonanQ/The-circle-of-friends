@@ -31,4 +31,6 @@ public interface DishMapper {
     Dish getbyid(Long id);
 //    @Delete("delete from dish where id = #{id}")
     void deletebyid(List<Long> ids);
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
 }
