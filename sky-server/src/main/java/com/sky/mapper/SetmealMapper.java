@@ -42,6 +42,7 @@ public interface SetmealMapper {
      */
     @Delete("delete from setmeal where id = #{id}")
     void deleteById(Long setmealId);
+
     @AutoFill(OperationType.UPDATE)
     void update(Setmeal setmeal);
     /**
