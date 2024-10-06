@@ -34,4 +34,17 @@ public class ShopCartController {
         List<ShoppingCart> shoppingCartList = shoppingCartService.sclist();
         return Result.success(shoppingCartList);
     }
+
+    @DeleteMapping("/clean")
+    @ApiOperation(value = "清空购物车", notes = "清空购物车")
+    public Result clean(){
+        shoppingCartService.shoppingCardclean();
+        return Result.success();
+    }
+    @PostMapping("/sub")
+    @ApiOperation(value = "减少商品数量", notes = "减少商品数量")
+    public Result sub(@RequestBody ShoppingCartDTO shoppingCartDTO){
+        shoppingCartService.shoppingCardsub(shoppingCartDTO);
+        return Result.success();
+    }
 }
