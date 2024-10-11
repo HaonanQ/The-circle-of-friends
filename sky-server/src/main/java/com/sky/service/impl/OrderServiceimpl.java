@@ -1,8 +1,11 @@
 package com.sky.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
@@ -10,10 +13,12 @@ import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,5 +140,27 @@ public class OrderServiceimpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+    }
+
+    @Override
+    public PageResult page(int pagenum, int pagesize, Integer status) {
+        PageHelper.startPage(pagenum, pagesize);
+        OrdersPageQueryDTO ordersPageQueryDTO = new OrdersPageQueryDTO();
+        ordersPageQueryDTO.setStatus(status);
+        ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
+
+        Page<Orders> page = orderMapper.pagequery(ordersPageQueryDTO);
+        List<OrderVO> orderVOS = new ArrayList<>();
+        if(page!= null && page.size() > 0){
+            for(Orders orders : page){
+                Long orderId = orders.getId();
+                List<OrderDetail> orderDetails = orderDetail.getByOrderId(orderId);
+                OrderVO orderVO = new OrderVO();
+                BeanUtils.copyProperties(orders,orderVO);
+                orderVO.setOrderDetailList(orderDetails);
+                orderVOS.add(orderVO);
+            }
+        }
+        return new PageResult(page.getTotal(),orderVOS);
     }
 }
