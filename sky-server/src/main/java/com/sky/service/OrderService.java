@@ -20,4 +20,10 @@ public interface OrderService {
     void paySuccess(String outTradeNo);
 
     PageResult page(int page, int pagesize, Integer status);
+
+    OrderVO orderDetails(Long id);
+
+    void cancel(Long id) throws Exception;
+
+    void repetition(Long id);
 }

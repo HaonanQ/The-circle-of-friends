@@ -12,6 +12,10 @@ import java.util.List;
 @Mapper
 public interface ShoppingCartMapper {
 
+    static void insertBatch(List<ShoppingCart> shoppingCarts) {
+
+    }
+
     List<ShoppingCart> list(ShoppingCart shoppingCart);
     @Update("update shopping_cart set number = #{number} where id = #{id}")
     void update(ShoppingCart shoppingCart);
