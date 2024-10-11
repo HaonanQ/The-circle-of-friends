@@ -46,8 +46,8 @@ public class OrderController {
     //历史订单
     @GetMapping("/historyOrders")
     @ApiOperation("历史订单")
-    public Result<PageResult> page(int page,int pagesize,Integer status){
-        PageResult pageResult = orderService.page(page,pagesize,status);
+    public Result<PageResult> page(int page,int pageSize,Integer status){
+        PageResult pageResult = orderService.pagequery(page,pageSize,status);
         return Result.success(pageResult);
     }
 
@@ -67,7 +67,7 @@ public class OrderController {
 
     @PostMapping("/repetition/{id}")
     @ApiOperation("再来一单")
-    public Result repetion(@PathVariable("id") Long id){
+    public Result repetion(@PathVariable Long id){
         orderService.repetition(id);
         return Result.success();
     }
