@@ -38,4 +38,6 @@ public interface OrderService {
     void shopcancel(OrdersCancelDTO ordersCancelDTO)throws Exception;
 
     void delivery(Long id);
+
+    void complete(Long id);
 }

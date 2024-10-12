@@ -272,11 +272,11 @@ public class OrderServiceimpl implements OrderService {
         Integer payStatus = orderdb.getPayStatus();
         if(payStatus == Orders.PAID){
             //用户已支付，需要退款
-            String refund = weChatPayUtil.refund(
-                    orderdb.getNumber(),
-                    orderdb.getNumber(),
-                    new BigDecimal(0.01),
-                    new BigDecimal(0.01));
+//            String refund = weChatPayUtil.refund(
+//                    orderdb.getNumber(),
+//                    orderdb.getNumber(),
+//                    new BigDecimal(0.01),
+//                    new BigDecimal(0.01));
 
         }
         // 拒单需要退款，根据订单id更新订单状态、拒单原因、取消时间
@@ -294,11 +294,11 @@ public class OrderServiceimpl implements OrderService {
         Integer payStatus = orderdb.getPayStatus();
         if(payStatus == Orders.PAID){
             //用户已支付，需要退款
-            String refund = weChatPayUtil.refund(
-                    orderdb.getNumber(),
-                    orderdb.getNumber(),
-                    new BigDecimal(0.01),
-                    new BigDecimal(0.01));
+//            String refund = weChatPayUtil.refund(
+//                    orderdb.getNumber(),
+//                    orderdb.getNumber(),
+//                    new BigDecimal(0.01),
+//                    new BigDecimal(0.01));
 
         }
         Orders order = new Orders();
@@ -318,11 +318,26 @@ public class OrderServiceimpl implements OrderService {
         }
         // 订单状态修改为 4派送中
         Orders order = new Orders();
-        order.setId(id);
+        order.setId(orderdb.getId());
         order.setStatus(Orders.DELIVERY_IN_PROGRESS);
 //        order.setDeliveryTime(LocalDateTime.now());
         orderMapper.update(order);
 
+    }
+
+    @Override
+    public void complete(Long id) {
+        Orders orderdb = orderMapper.getById(id);
+        // 订单只有存在且状态为4（派送中）才可以完成
+        if(orderdb == null && !(orderdb.getStatus() == Orders.DELIVERY_IN_PROGRESS)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        // 订单状态修改为 5已完成
+        Orders order = new Orders();
+        order.setId(orderdb.getId());
+        order.setStatus(Orders.COMPLETED);
+        order.setDeliveryTime(LocalDateTime.now());
+        orderMapper.update(order);
     }
 
     public List<OrderVO> getOrderVOList(Page<Orders> page){

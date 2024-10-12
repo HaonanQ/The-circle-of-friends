@@ -56,7 +56,7 @@ public class OrderController {
         orderService.confirm(ordersConfirmDTO);
         return Result.success();
     }
-    @PutMapping("/cancel/{id}")
+    @PutMapping("/rejection")
     @ApiOperation("拒绝订单")
     public Result rejection(@RequestBody OrdersRejectionDTO ordersRejectionDTO) throws Exception {
         orderService.rejection(ordersRejectionDTO);
@@ -74,6 +74,11 @@ public class OrderController {
         orderService.delivery(id);
         return Result.success();
     }
-
+    @PutMapping("/complete/{id}")
+    @ApiOperation("完成订单")
+    public Result complete(@PathVariable Long id){
+        orderService.complete(id);
+        return Result.success();
+    }
 }
 
