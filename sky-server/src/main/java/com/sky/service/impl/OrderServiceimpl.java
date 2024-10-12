@@ -309,6 +309,22 @@ public class OrderServiceimpl implements OrderService {
         orderMapper.update(order);
     }
 
+    @Override
+    public void delivery(Long id) {
+        Orders orderdb = orderMapper.getById(id);
+        // 订单只有存在且状态为3（待派送）才可以派送
+        if(orderdb == null && !(orderdb.getStatus() == Orders.DELIVERY_IN_PROGRESS)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        // 订单状态修改为 4派送中
+        Orders order = new Orders();
+        order.setId(id);
+        order.setStatus(Orders.DELIVERY_IN_PROGRESS);
+//        order.setDeliveryTime(LocalDateTime.now());
+        orderMapper.update(order);
+
+    }
+
     public List<OrderVO> getOrderVOList(Page<Orders> page){
         List<OrderVO> list = new ArrayList<>();
         List<Orders> ordersList = page.getResult();

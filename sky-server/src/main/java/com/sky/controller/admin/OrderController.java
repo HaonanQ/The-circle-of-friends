@@ -68,5 +68,12 @@ public class OrderController {
         orderService.shopcancel(ordersCancelDTO);
         return Result.success();
     }
+    @PutMapping("/delivery/{id}")
+    @ApiOperation("派送订单")
+    public Result delivery(@PathVariable Long id){
+        orderService.delivery(id);
+        return Result.success();
+    }
+
 }
 
