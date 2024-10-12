@@ -32,4 +32,8 @@ public interface OrderService {
     OrderStatisticsVO statistics();
 
     void confirm(OrdersConfirmDTO ordersConfirmDTO);
+
+    void rejection(OrdersRejectionDTO ordersRejectionDTO)throws Exception;
+
+    void shopcancel(OrdersCancelDTO ordersCancelDTO)throws Exception;
 }
