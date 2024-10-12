@@ -243,7 +243,7 @@ public class OrderServiceimpl implements OrderService {
     public OrderStatisticsVO statistics() {
         // 根据状态，分别查询出待接单、待派送、派送中的订单数量
         Integer toBeConfirmed = orderMapper.countStatus(Orders.TO_BE_CONFIRMED);
-        Integer confirmed = orderMapper.countStatus(Orders.CANCELLED);
+        Integer confirmed = orderMapper.countStatus(Orders.CONFIRMED);
         Integer deliveryInProgress = orderMapper.countStatus(Orders.DELIVERY_IN_PROGRESS);
         // 将查询出的数据封装到orderStatisticsVO中响应
         OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
@@ -266,7 +266,7 @@ public class OrderServiceimpl implements OrderService {
     public void rejection(OrdersRejectionDTO ordersRejectionDTO) throws Exception {
         Orders orderdb = orderMapper.getById(ordersRejectionDTO.getId());
         // 订单只有存在且状态为2（待接单）才可以拒单
-        if(orderdb == null && !(orderdb.getStatus() == Orders.TO_BE_CONFIRMED)){
+        if(orderdb == null && !orderdb.getStatus().equals(Orders.TO_BE_CONFIRMED)){
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
         Integer payStatus = orderdb.getPayStatus();
