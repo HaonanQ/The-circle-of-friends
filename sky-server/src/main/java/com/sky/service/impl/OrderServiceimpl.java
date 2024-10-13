@@ -153,9 +153,9 @@ public class OrderServiceimpl implements OrderService {
 
         // 向websocket发送消息
         Map map = new HashMap();
-        map.put("type", "1");
+        map.put("type", 1);
         map.put("orderId", ordersDB.getId());
-        map.put("content","订单:"+outTradeNo);
+        map.put("content","订单: "+outTradeNo);
         String message = JSONObject.toJSONString(map);
         webSocketServer.sendToAllClient(message);
 
@@ -353,6 +353,21 @@ public class OrderServiceimpl implements OrderService {
         order.setStatus(Orders.COMPLETED);
         order.setDeliveryTime(LocalDateTime.now());
         orderMapper.update(order);
+    }
+
+    @Override
+    public void reminder(Long id) {
+        Orders orderdb = orderMapper.getById(id);
+        // 订单只有存在
+        if(orderdb == null ){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        Map map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", id);
+        map.put("content","订单: "+orderdb.getNumber());
+        String message = JSONObject.toJSONString(map);
+        webSocketServer.sendToAllClient(message);
     }
 
     public List<OrderVO> getOrderVOList(Page<Orders> page){

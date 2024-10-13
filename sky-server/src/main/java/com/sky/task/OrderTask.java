@@ -19,7 +19,7 @@ public class OrderTask {
     private OrderMapper orderMapper;
     @Scheduled(cron = "0 * * * * ?")
     public void setStatusorderTimeout(){
-        log.info("开始执行定时任务，设置订单超时状态");
+        log.info("开始执行定时任务，设置订单支付超时状态");
         List<Orders> orders = orderMapper.updateStatusByTimeout(Orders.PENDING_PAYMENT, LocalDateTime.now().plusMinutes(-15));
         if(orders!= null && orders.size() > 0){
             for(Orders order : orders){
