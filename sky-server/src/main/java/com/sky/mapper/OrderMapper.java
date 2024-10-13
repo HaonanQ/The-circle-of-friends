@@ -2,12 +2,12 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.core.annotation.Order;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Mapper
@@ -31,4 +31,6 @@ public interface OrderMapper {
     Orders getById(Long id);
     @Select("select count(id) from orders where status = #{status}")
     Integer countStatus(Integer status);
+    @Select("select * from orders where status = #{status} and orders.order_time < #{localTime}")
+    List<Orders> updateStatusByTimeout(Integer status, LocalDateTime localTime);
 }
