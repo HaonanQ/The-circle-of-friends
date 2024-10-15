@@ -36,4 +36,6 @@ public interface OrderMapper {
     List<Orders> updateStatusByTimeout(Integer status, LocalDateTime localTime);
 
     Double countTurnover(Map map);
+
+    Integer countByMap(Map map);
 }
