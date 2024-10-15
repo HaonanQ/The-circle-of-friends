@@ -1,13 +1,16 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceimpl implements ReportService {
@@ -117,6 +121,24 @@ public class ReportServiceimpl implements ReportService {
                 .orderCompletionRate(orderCompletionRate)
                 .build();
     }
+
+    @Override
+    public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
+        LocalDateTime starttime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endtime = LocalDateTime.of(end, LocalTime.MAX);
+
+        List<GoodsSalesDTO> list = orderMapper.getSalesTop10(starttime, endtime);
+        String namelist =
+                StringUtils.join(list.stream().map(GoodsSalesDTO::getName).collect(Collectors.toList()), ",");
+        String numberlist =
+                StringUtils.join(list.stream().map(GoodsSalesDTO::getNumber).collect(Collectors.toList()), ",");
+
+        return SalesTop10ReportVO.builder()
+                .nameList(namelist)
+                .numberList(numberlist)
+                .build();
+    }
+
     private Integer getOrderCount(LocalDateTime beginTime, LocalDateTime endTime, Integer status) {
         Map map = new HashMap();
         map.put("status", status);
